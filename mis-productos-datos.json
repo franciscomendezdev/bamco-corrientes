@@ -1,0 +1,68 @@
+{
+  "version": 1,
+  "accounts": [
+    {
+      "name": "Cuenta sueldo - prov.",
+      "cbu": "0940006166000881820014",
+      "balance": 300644.25,
+      "movements": [
+        {
+          "date": "24-Sep-2026 - 00:29:33",
+          "label": "Seg.Robo ATM",
+          "amount": -150,
+          "balance": 300644.25
+        },
+        {
+          "date": "21-Sep-2026 - 14:32:03",
+          "label": "Transferencias Electrónicas",
+          "amount": -16250,
+          "balance": 300794.25
+        },
+        {
+          "date": "21-Sep-2026 - 14:31:15",
+          "label": "Transferencias Electrónicas",
+          "amount": -100,
+          "balance": 317044.25
+        },
+        {
+          "date": "21-Sep-2026 - 14:30:03",
+          "label": "Transferencias Electrónicas",
+          "amount": -1000,
+          "balance": 317144.25
+        }
+      ]
+    },
+    {
+      "name": "Cuenta de seg.social/jub-pens",
+      "cbu": "0940006170000881820022",
+      "balance": 1655096.3,
+      "movements": [
+        {
+          "date": "25-Sep-2026 - 00:35:29",
+          "label": "ANSES SIPA",
+          "amount": 1636087.69,
+          "balance": 1655096.3
+        },
+        {
+          "date": "21-Sep-2026 - 14:32:03",
+          "label": "Transferencias Electrónicas",
+          "amount": 16250,
+          "balance": 19008.61
+        },
+        {
+          "date": "21-Sep-2026 - 14:31:15",
+          "label": "Transferencias Electrónicas",
+          "amount": 100,
+          "balance": 2758.61
+        },
+        {
+          "date": "21-Sep-2026 - 14:30:03",
+          "label": "Transferencias Electrónicas",
+          "amount": 1000,
+          "balance": 2658.61
+        }
+      ]
+    }
+  ],
+  "usdBalance": 0
+}

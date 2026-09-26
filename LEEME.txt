@@ -1,0 +1,21 @@
+MIS PRODUCTOS — ARCHIVOS EDITABLES
+
+1. Descomprimí el ZIP y abrí index.html con VS Code o cualquier editor de texto.
+   Es un sitio completo en un solo archivo: el diseño está dentro de <style>
+   y el funcionamiento dentro de <script>. No requiere instalar paquetes.
+
+2. Para cambiar los datos de ejemplo desde el código, buscá "exampleAccounts"
+   cerca del comienzo del <script>. Cada cuenta tiene nombre, CBU, saldo y
+   movimientos. El saldo en dólares inicial está en "exampleData".
+
+3. También podés editar mis-productos-datos.json con un editor de texto.
+   En la web publicada, entrá en Menú > Editar datos > Importar datos,
+   seleccioná ese JSON y tocá Guardar cambios.
+
+4. Para ver los cambios de index.html en tu computadora, abrilo en el navegador.
+   Si usás VS Code, Live Server es una opción cómoda. Si ya guardaste cambios
+   desde la pantalla de edición, esos datos del navegador tienen prioridad
+   sobre los datos de ejemplo del código: usá "Restablecer ejemplo" y guardá.
+
+IMPORTANTE: editar esta copia local no actualiza automáticamente la web publicada.
+Podés enviarme los archivos modificados para actualizarla.

@@ -1,0 +1,370 @@
+<!doctype html>
+<html lang="es-AR">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <meta name="theme-color" content="#092b9e">
+  <meta name="description" content="Vista de productos, cajas de ahorro y movimientos.">
+  <title>Mis productos · Cajas de ahorro</title>
+  <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='15' fill='%23092b9e'/%3E%3Cpath d='M12 24h40v27H12zM17 18h30v6H17z' fill='none' stroke='white' stroke-width='4' stroke-linejoin='round'/%3E%3Ccircle cx='44' cy='37' r='4' fill='white'/%3E%3C/svg%3E">
+  <style>
+    :root{font-family:Arial,Helvetica,sans-serif;color:#202b3b;background:#e9edf4;font-synthesis:none;-webkit-text-size-adjust:100%}
+    *{box-sizing:border-box}
+    body{margin:0;min-height:100dvh;display:flex;align-items:center;justify-content:center}
+    button{font:inherit}
+    button:focus-visible,[tabindex]:focus-visible{outline:3px solid #76b9f5;outline-offset:3px}
+    .app{width:100%;height:100dvh;max-width:450px;display:flex;flex-direction:column;overflow:hidden;background:#f8fafc;position:relative;box-shadow:0 22px 65px rgba(9,25,67,.22)}
+    .screen{min-height:0;display:flex;flex-direction:column;flex:1;overflow:hidden}
+    .screen[hidden]{display:none}
+    .topbar{background:#092b9e;color:#fff;min-height:105px;padding:28px 18px 16px;display:grid;grid-template-columns:1fr auto 1fr;align-items:center;flex:none}
+    .topbar h1{font-size:1.35rem;line-height:1.25;margin:0;font-weight:700;white-space:nowrap;text-align:center}
+    .title-group{text-align:center}
+    .demo-tag{display:block;font-size:.58rem;font-weight:700;letter-spacing:.14em;color:#a8d5ee;margin-top:3px}
+    .icon-button{width:44px;height:44px;border:0;background:none;color:inherit;display:grid;place-items:center;cursor:pointer;padding:0}
+    .icon-button svg{width:29px;height:29px;stroke:currentColor;stroke-width:2.15;fill:none;stroke-linecap:round;stroke-linejoin:round}
+    .help{justify-self:end;display:flex;align-items:center;gap:6px;border:0;border-radius:30px;padding:8px 12px;background:#78c0e3;color:#1c4165;font-size:.9rem;cursor:pointer}
+    .help svg{width:20px;height:20px;stroke:currentColor;fill:none;stroke-width:1.8}
+    .help:active,.summary-card:active{transform:scale(.99)}
+    .home-scroll,.detail-scroll{flex:1;min-height:0;overflow-y:auto;overscroll-behavior:contain;scrollbar-width:thin}
+    .home-scroll{padding:19px 15px 34px;background:#f7f9fb}
+    .section-heading{display:flex;align-items:center;justify-content:space-between;margin:0 5px 17px}
+    .section-heading h2{font-size:1.24rem;line-height:1.3;font-weight:500;margin:0;color:#1d2e49}
+    .visibility{border:0;background:transparent;color:#687779;width:40px;height:35px;display:grid;place-items:center;cursor:pointer}
+    .visibility svg{width:29px;height:29px;stroke:currentColor;stroke-width:1.9;fill:none;stroke-linecap:round;stroke-linejoin:round}
+    .summary-card{width:100%;min-height:145px;background:white;border:1px solid #eef0f2;border-radius:17px;box-shadow:0 5px 14px rgba(28,42,64,.16);display:flex;align-items:center;gap:22px;padding:23px 22px;position:relative;color:#263341;text-align:left}
+    button.summary-card{cursor:pointer;transition:transform .16s,box-shadow .16s}
+    button.summary-card:hover{box-shadow:0 8px 19px rgba(28,42,64,.20)}
+    .summary-icon{width:74px;height:74px;flex:none;color:#354969;stroke-width:1.55;fill:none;stroke:currentColor;stroke-linejoin:round;stroke-linecap:round}
+    .summary-body{min-width:0;align-self:flex-start;margin-top:4px}
+    .summary-title{display:block;text-transform:uppercase;font-size:1rem;line-height:1.25;letter-spacing:.01em;white-space:nowrap}
+    .summary-money{display:block;font-size:1.07rem;line-height:1.35;margin-top:8px;white-space:nowrap}
+    .card-count{position:absolute;bottom:13px;right:19px;font-size:.9rem;color:#67748b}
+    .card-stack{display:grid;gap:15px}
+    .cards-heading{margin-top:24px;margin-bottom:17px}
+    .product-card{min-height:136px}
+    .product-card .summary-body{align-self:center;margin:0}
+    .product-card .summary-icon{width:68px;height:68px}
+    .detail-header{min-height:95px;padding-top:22px}
+    .detail-header .back{justify-self:start}
+    .detail-scroll{background:#fdfefe}
+    .detail-hero{position:relative;padding:11px 0 3px;isolation:isolate}
+    .detail-hero:before{content:"";position:absolute;z-index:-1;inset:0 0 67px;background:#092b9e;clip-path:polygon(0 0,100% 0,100% 51%,0 100%)}
+    .carousel{display:flex;gap:18px;overflow-x:auto;scroll-snap-type:x mandatory;scroll-padding-inline:12%;padding:7px 7% 18px;scrollbar-width:none;touch-action:pan-x pan-y;cursor:grab;overscroll-behavior-inline:contain}
+    .carousel::-webkit-scrollbar{display:none}
+    .carousel.dragging{cursor:grabbing;scroll-snap-type:none;user-select:none}
+    .account-card{flex:0 0 76%;height:193px;border-radius:7px;background:#fff;box-shadow:0 4px 13px rgba(19,31,52,.2);border:1px solid #e4e8ed;padding:16px 14px;scroll-snap-align:center;scroll-snap-stop:always;position:relative;color:#374144}
+    .account-name{display:block;font-size:.95rem;line-height:1.2;padding-right:22px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+    .account-cbu{display:block;font-size:.87rem;line-height:1.25;margin-top:5px;white-space:nowrap;letter-spacing:.005em}
+    .info-mark{position:absolute;right:12px;top:12px;border-radius:50%;width:22px;height:22px;background:#082d8e;color:#fff;font-family:Georgia,serif;font-style:italic;font-weight:bold;text-align:center;line-height:23px;font-size:1rem}
+    .account-balance{display:flex;align-items:flex-start;justify-content:center;gap:2px;white-space:nowrap;color:#009d1b;margin-top:47px;font-size:1.87rem;line-height:1;font-weight:500;letter-spacing:.005em}
+    .account-balance .currency{font-size:1.1rem;line-height:1.5;margin-right:3px}
+    .account-balance .cents{font-size:.94rem;line-height:1.15;margin-left:2px}
+    .dots{height:25px;display:flex;justify-content:center;align-items:center;gap:18px;margin:2px 0 7px}
+    .dot{width:13px;height:13px;background:#6688b9;border:0;border-radius:20px;padding:0;cursor:pointer;transition:width .2s,background .2s}
+    .dot[aria-current="true"]{width:32px;background:#092b9e}
+    .movements-title{margin:0;padding:12px 16px 16px;text-align:center;color:#1a2434;font-weight:500;font-size:1.29rem;line-height:1.3}
+    .movement-list{margin:0;padding:0;list-style:none;border-top:1px solid #d4dae2;background:#fff}
+    .movement{padding:12px 15px 15px;border-bottom:1px solid #cbd1d9;min-height:103px}
+    .movement-date{font-size:.93rem;color:#85898e;line-height:1.35;margin-bottom:5px}
+    .movement-main{display:flex;align-items:baseline;justify-content:space-between;gap:8px}
+    .movement-label{font-size:1.01rem;line-height:1.25;min-width:0}
+    .movement-amount{white-space:nowrap;font-size:1.08rem;font-weight:500;line-height:1.25}
+    .movement-amount.negative{color:#d1282e}
+    .movement-amount.positive{color:#008c27}
+    .movement-saldo{font-size:.93rem;color:#929498;line-height:1.3;margin-top:6px}
+    .bottom-nav{height:84px;padding:8px 8px max(8px,env(safe-area-inset-bottom));flex:none;display:grid;grid-template-columns:repeat(5,1fr);align-items:center;background:#fbfcfb;box-shadow:0 -2px 12px rgba(40,52,65,.07);border-top:1px solid #e9edef;z-index:2}
+    .nav-item{min-width:0;height:68px;border:0;background:transparent;color:#787f82;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:3px;font-size:.75rem;white-space:nowrap;padding:1px 0}
+    .nav-item svg{width:29px;height:29px;stroke:currentColor;stroke-width:1.65;fill:none;stroke-linecap:round;stroke-linejoin:round}
+    .nav-item.current{color:#092b9e;cursor:pointer}
+    .nav-item.current svg{fill:#092b9e;stroke:#092b9e}
+    .nav-item.current .home-door{fill:#fff;stroke:#fff}
+    .nav-item[disabled]{opacity:.85}
+    .nav-qr{width:70px;height:70px;margin-top:-15px;justify-self:center;border:4px solid #ecf0eb;border-radius:50%;background:#092b9e;box-shadow:0 2px 7px #89909c;color:#fff;display:grid;place-items:center}
+    .nav-qr svg{width:42px;height:42px;fill:none;stroke:white;stroke-width:4}
+    .aux-dialog{border:0;border-radius:16px;padding:22px;width:min(360px,calc(100vw - 32px));box-shadow:0 20px 55px rgba(10,25,62,.3);color:#1f2e44}
+    .aux-dialog::backdrop{background:rgba(5,19,50,.48)}
+    .aux-dialog h2{font-size:1.18rem;margin:0 0 16px}
+    .aux-dialog p{font-size:1rem;line-height:1.45;margin:0 0 20px}
+    .dialog-action{display:block;width:100%;border:1px solid #cdd6e4;border-radius:9px;background:#f7f9fc;color:#092b9e;text-align:left;padding:12px 14px;margin-top:8px;cursor:pointer}
+    .dialog-close{display:block;margin:19px 0 0 auto;border:0;border-radius:8px;background:#092b9e;color:#fff;padding:9px 16px;cursor:pointer}
+    .app.editing .bottom-nav{display:none}
+    .editor-scroll{flex:1;min-height:0;overflow-y:auto;padding:18px 16px 36px;background:#f7f9fb}
+    .editor-note{font-size:.87rem;line-height:1.4;color:#526078;margin:0 0 16px}
+    .editor-card{background:white;border:1px solid #e4e9f0;border-radius:13px;padding:15px;margin-bottom:15px;box-shadow:0 2px 8px rgba(24,41,70,.07)}
+    .editor-card h2{font-size:1.08rem;margin:0 0 14px;color:#1d2e49}
+    .editor-card summary{font-weight:700;font-size:1.03rem;cursor:pointer;list-style-position:inside;color:#102c68}
+    .editor-card[open] summary{margin-bottom:16px}
+    .editor-field{display:block;margin:12px 0 0;color:#34445b;font-size:.86rem;font-weight:600}
+    .editor-field input{display:block;width:100%;min-height:42px;margin-top:6px;padding:9px 10px;border:1px solid #bcc9d9;border-radius:8px;background:#fff;color:#1e2a3a;font-size:1rem;font-weight:400}
+    .editor-field input:focus{outline:2px solid #4a9ddb;border-color:#4a9ddb}
+    .editor-field input[aria-invalid="true"]{border-color:#c82839}
+    .editor-movements-title{font-size:.99rem;margin:23px 0 8px;color:#1d2e49}
+    .editor-movement{border:1px solid #dfe5ed;border-radius:9px;padding:12px;margin:10px 0;background:#fbfcfe}
+    .editor-movement-head{display:flex;align-items:center;justify-content:space-between;font-size:.85rem;font-weight:700;color:#51617a}
+    .editor-grid{display:grid;grid-template-columns:1fr 1fr;gap:0 10px}
+    .editor-grid .full{grid-column:1/-1}
+    .text-action{border:1px solid #a8bad0;border-radius:8px;background:white;color:#092b9e;padding:9px 11px;font-size:.86rem;font-weight:600;cursor:pointer}
+    .text-action.remove{color:#b52737;border-color:#e0b9c0;padding:6px 8px}
+    .editor-actions{display:flex;gap:9px;flex-wrap:wrap;margin:19px 0 7px}
+    .editor-feedback{font-size:.87rem;color:#b52737;min-height:22px;margin:0 0 6px}
+    .editor-footer{display:flex;gap:10px;justify-content:flex-end;padding:12px 16px max(12px,env(safe-area-inset-bottom));border-top:1px solid #dce3ed;background:#fff;flex:none}
+    .editor-footer button{border-radius:9px;border:1px solid #b4c3d6;background:white;color:#18345e;padding:11px 15px;font-weight:600;cursor:pointer}
+    .editor-footer .save-button{background:#092b9e;border-color:#092b9e;color:#fff}
+    .toast{position:absolute;left:18px;right:18px;bottom:96px;background:#18345e;color:#fff;padding:12px 15px;border-radius:10px;text-align:center;box-shadow:0 7px 25px #1b2a4655;z-index:5;font-size:.9rem}
+    .toast[hidden]{display:none}
+    @media(min-width:520px){body{padding:20px}.app{height:min(900px,calc(100dvh - 40px));min-height:min(680px,calc(100dvh - 40px));border-radius:25px}}
+    @media(max-width:360px){.summary-card{gap:12px;padding:19px 15px}.summary-icon{width:62px;height:62px}.summary-title{font-size:.89rem}.summary-money{font-size:.96rem}.account-card{flex-basis:82%;padding:15px 10px}.account-name{font-size:.88rem}.account-cbu{font-size:.77rem}.account-balance{font-size:1.62rem}.movement-label{font-size:.94rem}.movement-amount{font-size:.97rem}}
+    @media(prefers-reduced-motion:reduce){*,*:before,*:after{scroll-behavior:auto!important;transition:none!important}}
+  </style>
+</head>
+<body>
+  <div class="app" id="app">
+    <section class="screen" id="home-screen" aria-label="Mis productos">
+      <header class="topbar">
+        <button class="icon-button" type="button" aria-label="Menú" id="menu-button"><svg viewBox="0 0 32 32" aria-hidden="true"><path d="M5 9h22M5 16h22M5 23h22"/></svg></button>
+        <div class="title-group"><h1>Mis productos</h1><span class="demo-tag">DEMO</span></div>
+        <button class="help" type="button" id="help-button" aria-label="Ayuda"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 19c5 0 9-3.4 9-7.5S17 4 12 4s-9 3.4-9 7.5c0 1.8.7 3.4 2 4.7L4 20l4.2-1.8c1.2.5 2.5.8 3.8.8Z"/><path d="M9.8 9.5a2.4 2.4 0 0 1 4.5 1.1c0 1.7-2.3 1.8-2.3 3.3M12 16.7h.01"/></svg>Ayuda</button>
+      </header>
+      <main class="home-scroll">
+        <div class="section-heading"><h2>Cuentas</h2><button class="visibility" type="button" id="visibility-button" aria-label="Ocultar importes" aria-pressed="false"><svg viewBox="0 0 32 32" aria-hidden="true"><path d="M3 16s5.1-7.5 13-7.5S29 16 29 16s-5.1 7.5-13 7.5S3 16 3 16Z"/><circle cx="16" cy="16" r="4.2"/><path class="eye-slash" d="M5 27 27 5" style="display:none"/></svg></button></div>
+        <button class="summary-card" type="button" id="open-accounts" aria-label="Ver las dos cajas de ahorro y sus movimientos">
+          <svg class="summary-icon" viewBox="0 0 78 78" aria-hidden="true"><path d="M19 22V12h30l13 13v15M25 22v-5h17l4 5M49 12v13h13M22 29V20h25l7 9"/><path d="M13 28h42a5 5 0 0 1 5 5v32H16a7 7 0 0 1-7-7V35a7 7 0 0 1 7-7Z"/><path d="M60 43H48a6 6 0 0 0-6 6 6 6 0 0 0 6 6h12M51 49h1"/></svg>
+          <span class="summary-body"><span class="summary-title">Cajas de ahorros</span><span class="summary-money" data-amount="home-ars">$ 1.955.740,55</span><span class="summary-money" data-amount="home-usd">u$s 0,00</span></span>
+          <span class="card-count">Cantidad: 2</span>
+        </button>
+        <div class="section-heading cards-heading"><h2>Tarjetas</h2></div>
+        <div class="card-stack">
+          <article class="summary-card product-card"><svg class="summary-icon" viewBox="0 0 78 78" aria-hidden="true"><rect x="9" y="15" width="55" height="45" rx="3"/><path d="M9 27h55M9 34h55M18 49h17M18 55h23"/><circle cx="59" cy="55" r="13" fill="#fff"/><path d="M59 47v16M63 50c-2-2-8-2-8 1 0 4 8 2 8 6 0 3-6 4-9 1"/></svg><span class="summary-body"><span class="summary-title">Tarjetas de débito</span></span><span class="card-count">Cantidad: 2</span></article>
+          <article class="summary-card product-card"><svg class="summary-icon" viewBox="0 0 78 78" aria-hidden="true"><rect x="10" y="26" width="56" height="38" rx="3"/><path d="m13 26-4-12 53-13 5 23M10 38h56M19 55h15M45 54h10v6H45z"/></svg><span class="summary-body"><span class="summary-title">Tarjetas de crédito</span></span></article>
+        </div>
+      </main>
+    </section>
+    <section class="screen" id="detail-screen" aria-label="Cajas de ahorro" hidden>
+      <header class="topbar detail-header"><button class="icon-button back" type="button" id="back-button" aria-label="Volver a Mis productos"><svg viewBox="0 0 32 32" aria-hidden="true"><path d="M25 16H7m0 0 8-8m-8 8 8 8"/></svg></button><div class="title-group"><h1>Cajas de ahorro</h1><span class="demo-tag">DEMO</span></div><button class="icon-button" type="button" id="edit-detail" aria-label="Editar datos"><svg viewBox="0 0 32 32" aria-hidden="true"><path d="M6 23 22 7l4 4-16 16-5 1 1-5ZM19 10l4 4"/></svg></button></header>
+      <main class="detail-scroll" id="detail-scroll">
+        <div class="detail-hero"><div class="carousel" id="carousel" tabindex="0" role="region" aria-label="Cajas de ahorro: deslizar para cambiar de cuenta"></div><div class="dots" id="dots" aria-label="Seleccionar cuenta"></div></div>
+        <h2 class="movements-title">Últimos movimientos</h2>
+        <ul class="movement-list" id="movement-list" aria-live="polite"></ul>
+      </main>
+    </section>
+    <section class="screen" id="editor-screen" aria-label="Editar datos" hidden>
+      <header class="topbar detail-header"><button class="icon-button back" type="button" id="editor-back" aria-label="Salir del editor"><svg viewBox="0 0 32 32" aria-hidden="true"><path d="M25 16H7m0 0 8-8m-8 8 8 8"/></svg></button><div class="title-group"><h1>Editar datos</h1><span class="demo-tag">DEMO</span></div><span></span></header>
+      <main class="editor-scroll"><p class="editor-note">Los cambios se guardan en este navegador. Para usarlos en otro dispositivo, exportá el archivo de datos e importalo allí.</p><form id="editor-form" novalidate></form><div class="editor-actions"><button class="text-action" type="button" id="export-data">Exportar datos</button><button class="text-action" type="button" id="import-data">Importar datos</button><input type="file" id="import-file" accept="application/json,.json" hidden><button class="text-action" type="button" id="reset-data">Restablecer ejemplo</button></div><p class="editor-feedback" id="editor-feedback" role="alert"></p></main>
+      <footer class="editor-footer"><button type="button" id="cancel-edit">Cancelar</button><button class="save-button" type="submit" form="editor-form">Guardar cambios</button></footer>
+    </section>
+    <nav class="bottom-nav" aria-label="Navegación principal">
+      <button class="nav-item current" type="button" id="home-nav" aria-current="page"><svg viewBox="0 0 32 32" aria-hidden="true"><path d="m3 15 13-11 13 11M7 13v16h18V13"/><path class="home-door" d="M13 29V19h6v10"/></svg><span>Productos</span></button>
+      <button class="nav-item" disabled type="button" aria-label="Transferir, no disponible en esta vista"><svg viewBox="0 0 32 32" aria-hidden="true"><path d="M4 12h22l-5-5M28 20H6l5 5"/></svg><span>Transferir</span></button>
+      <div class="nav-qr" aria-hidden="true"><svg viewBox="0 0 40 40"><path d="M4 4h11v11H4zM25 4h11v11H25zM4 25h11v11H4zM25 24h5M35 25v5M24 35h6M35 35h1M19 5v7M20 20h5M20 29v5M9 19h4"/></svg></div>
+      <button class="nav-item" disabled type="button" aria-label="Alias y CBU, no disponible en esta vista"><svg viewBox="0 0 32 32" aria-hidden="true"><circle cx="16" cy="9" r="5"/><path d="M5 28c0-6 4-10 11-10s11 4 11 10Z"/></svg><span>Alias/CBU</span></button>
+      <button class="nav-item" disabled type="button" aria-label="Pagos, no disponible en esta vista"><svg viewBox="0 0 32 32" aria-hidden="true"><path d="M5 9h23v19H5zM5 13 25 7v5M24 19h4v5h-4a2.5 2.5 0 1 1 0-5Z"/></svg><span>Pagos</span></button>
+    </nav>
+    <div class="toast" id="toast" role="status" hidden></div>
+    <dialog class="aux-dialog" id="aux-dialog" aria-labelledby="dialog-title"><h2 id="dialog-title"></h2><div id="dialog-content"></div><button class="dialog-close" type="button" id="dialog-close">Cerrar</button></dialog>
+  </div>
+  <script>
+    const exampleAccounts = [
+      {name:'Cuenta sueldo - prov.',cbu:'0940006166000881820014',balance:300644.25,movements:[
+        {date:'24-Sep-2026 - 00:29:33',label:'Seg.Robo ATM',amount:-150,balance:300644.25},
+        {date:'21-Sep-2026 - 14:32:03',label:'Transferencias Electrónicas',amount:-16250,balance:300794.25},
+        {date:'21-Sep-2026 - 14:31:15',label:'Transferencias Electrónicas',amount:-100,balance:317044.25},
+        {date:'21-Sep-2026 - 14:30:03',label:'Transferencias Electrónicas',amount:-1000,balance:317144.25}
+      ]},
+      {name:'Cuenta de seg.social/jub-pens',cbu:'0940006170000881820022',balance:1655096.30,movements:[
+        {date:'25-Sep-2026 - 00:35:29',label:'ANSES SIPA',amount:1636087.69,balance:1655096.30},
+        {date:'21-Sep-2026 - 14:32:03',label:'Transferencias Electrónicas',amount:16250,balance:19008.61},
+        {date:'21-Sep-2026 - 14:31:15',label:'Transferencias Electrónicas',amount:100,balance:2758.61},
+        {date:'21-Sep-2026 - 14:30:03',label:'Transferencias Electrónicas',amount:1000,balance:2658.61}
+      ]}
+    ];
+    const STORAGE_KEY='mis-productos-cajas-ahorro:v1';
+    const exampleData={accounts:exampleAccounts,usdBalance:0};
+    const clone=value=>JSON.parse(JSON.stringify(value));
+    function normalizeData(value){
+      if(!value||!Array.isArray(value.accounts)||value.accounts.length!==2)throw new Error('El archivo debe incluir dos cuentas.');
+      const number=(n,label)=>{if(typeof n!=='number'||!Number.isFinite(n)||Math.abs(n)>999999999999)throw new Error(`Importe inválido: ${label}.`);return Math.round(n*100)/100};
+      const required=(s,label,max=100)=>{if(typeof s!=='string'||!s.trim()||s.length>max)throw new Error(`Revisá ${label}.`);return s.trim()};
+      return {usdBalance:number(value.usdBalance,'saldo en dólares'),accounts:value.accounts.map((account,index)=>{
+        const name=required(account?.name,`nombre de cuenta ${index+1}`,80);
+        const cbu=required(account?.cbu,`CBU de cuenta ${index+1}`,22);
+        if(!/^\d{22}$/.test(cbu))throw new Error(`El CBU de la cuenta ${index+1} debe tener 22 dígitos.`);
+        if(!Array.isArray(account.movements)||account.movements.length>200)throw new Error(`Revisá los movimientos de la cuenta ${index+1}.`);
+        return {name,cbu,balance:number(account.balance,`saldo de cuenta ${index+1}`),movements:account.movements.map((item,i)=>({
+          date:required(item?.date,`fecha del movimiento ${i+1}`,60),label:required(item?.label,`detalle del movimiento ${i+1}`,100),
+          amount:number(item?.amount,`importe del movimiento ${i+1}`),balance:number(item?.balance,`saldo del movimiento ${i+1}`)
+        }))};
+      })};
+    }
+    let initialData=clone(exampleData);
+    try{const saved=localStorage.getItem(STORAGE_KEY);if(saved)initialData=normalizeData(JSON.parse(saved))}catch(error){console.warn('No se pudieron cargar los datos guardados.',error)}
+    let accounts=initialData.accounts;
+    let usdBalance=initialData.usdBalance;
+    const money = value => Math.abs(value).toLocaleString('es-AR',{minimumFractionDigits:2,maximumFractionDigits:2});
+    const escapeHtml = value => String(value).replace(/[&<>"']/g,char=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[char]));
+    const home = document.getElementById('home-screen');
+    const detail = document.getElementById('detail-screen');
+    const editor = document.getElementById('editor-screen');
+    const editorForm = document.getElementById('editor-form');
+    const carousel = document.getElementById('carousel');
+    const dots = document.getElementById('dots');
+    const list = document.getElementById('movement-list');
+    let selected = 0;
+    let hiddenAmounts = false;
+    let scrollTimer;
+    let editorReturn='/';
+    let toastTimer;
+    function renderSummary(){
+      const total=accounts.reduce((sum,account)=>sum+account.balance,0);
+      document.querySelector('[data-amount="home-ars"]').textContent=hiddenAmounts?'$ ••••••':(total<0?'- ':'')+'$ '+money(total);
+      document.querySelector('[data-amount="home-usd"]').textContent=hiddenAmounts?'u$s ••••':(usdBalance<0?'- ':'')+'u$s '+money(usdBalance);
+    }
+    const balanceParts = value => {
+      if(hiddenAmounts) return '<span>••••••</span>';
+      const [integer,cents] = money(value).split(',');
+      return `<span class="currency">${value<0?'- $':'$'}</span><span>${integer},</span><span class="cents">${cents}</span>`;
+    };
+    function renderCards(){
+      carousel.innerHTML = accounts.map((account,index)=>`<article class="account-card" aria-label="Cuenta ${index+1} de ${accounts.length}: ${escapeHtml(account.name)}"><span class="account-name">${escapeHtml(account.name)}</span><span class="account-cbu">CBU: ${escapeHtml(account.cbu)}</span><span class="info-mark" aria-hidden="true">i</span><div class="account-balance" aria-label="Saldo ${hiddenAmounts?'oculto':'$ '+money(account.balance)}">${balanceParts(account.balance)}</div></article>`).join('');
+      dots.innerHTML=accounts.map((_,index)=>`<button class="dot" type="button" aria-label="Ver cuenta ${index+1}" aria-current="${index===selected}" data-index="${index}"></button>`).join('');
+    }
+    function renderMovements(){
+      list.innerHTML=accounts[selected].movements.length?accounts[selected].movements.map(item=>`<li class="movement"><div class="movement-date">${escapeHtml(item.date)}</div><div class="movement-main"><span class="movement-label">${escapeHtml(item.label)}</span><span class="movement-amount ${item.amount<0?'negative':'positive'}">${hiddenAmounts?'••••••':`${item.amount<0?'- ':''}$ ${money(item.amount)}`}</span></div><div class="movement-saldo">Saldo ${hiddenAmounts?'••••••':'$ '+money(item.balance)}</div></li>`).join(''):'<li class="movement">Sin movimientos registrados.</li>';
+    }
+    const inputAmount=value=>(value<0?'-':'')+money(value);
+    function movementFields(item,index){
+      return `<div class="editor-movement" data-row><div class="editor-movement-head"><span>Movimiento ${index+1}</span><button class="text-action remove" type="button" data-remove>Eliminar</button></div><div class="editor-grid"><label class="editor-field full">Fecha y hora<input data-name="date" type="text" value="${escapeHtml(item.date)}" placeholder="25-Sep-2026 - 00:35:29" maxlength="60"></label><label class="editor-field full">Detalle<input data-name="label" type="text" value="${escapeHtml(item.label)}" maxlength="100"></label><label class="editor-field">Importe (+ ingreso / − egreso)<input data-name="amount" type="text" inputmode="decimal" value="${escapeHtml(inputAmount(item.amount))}"></label><label class="editor-field">Saldo posterior<input data-name="balance" type="text" inputmode="decimal" value="${escapeHtml(inputAmount(item.balance))}"></label></div></div>`;
+    }
+    function renderEditor(data){
+      editorForm.innerHTML=`<div class="editor-card"><h2>Resumen</h2><label class="editor-field">Saldo total en dólares (u$s)<input data-usd type="text" inputmode="decimal" value="${escapeHtml(inputAmount(data.usdBalance))}"></label><p class="editor-note" style="margin:10px 0 0">El total en pesos se calcula sumando las dos cuentas.</p></div>`+data.accounts.map((account,index)=>`<details class="editor-card" data-account="${index}" ${index===0?'open':''}><summary>Cuenta ${index+1} · ${escapeHtml(account.name)}</summary><label class="editor-field">Nombre<input data-field="name" type="text" value="${escapeHtml(account.name)}" maxlength="80"></label><label class="editor-field">CBU (22 dígitos)<input data-field="cbu" type="text" inputmode="numeric" value="${escapeHtml(account.cbu)}" maxlength="22"></label><label class="editor-field">Saldo actual ($)<input data-field="balance" type="text" inputmode="decimal" value="${escapeHtml(inputAmount(account.balance))}"></label><h3 class="editor-movements-title">Últimos movimientos</h3><div data-movements>${account.movements.map(movementFields).join('')}</div><button class="text-action" type="button" data-add>Agregar movimiento</button></details>`).join('');
+      document.getElementById('editor-feedback').style.color='#b52737';
+      document.getElementById('editor-feedback').textContent='';
+    }
+    function parseInputAmount(input,label){
+      let value=input.value.trim().replace(/\s/g,'').replace(/^\$|^u\$s/i,'');
+      if(!/^-?[\d.,]+$/.test(value))return invalid(input,`Revisá ${label}.`);
+      if(value.includes(',')){const pos=value.lastIndexOf(',');value=value.slice(0,pos).replace(/\./g,'')+'.'+value.slice(pos+1)}
+      else if((value.match(/\./g)||[]).length>1||/^-?\d{1,3}\.\d{3}$/.test(value))value=value.replace(/\./g,'');
+      if(!/^-?\d+(\.\d{1,2})?$/.test(value))return invalid(input,`Revisá ${label}. Usá hasta dos decimales.`);
+      const number=Number(value);
+      if(!Number.isFinite(number)||Math.abs(number)>999999999999)return invalid(input,`Revisá ${label}.`);
+      return number;
+    }
+    function invalid(input,message){input.setAttribute('aria-invalid','true');input.closest('details')?.setAttribute('open','');input.focus();input.scrollIntoView({block:'center'});throw new Error(message)}
+    function requiredInput(input,label){const value=input.value.trim();if(!value)return invalid(input,`Completá ${label}.`);return value}
+    function readEditorData(){
+      editorForm.querySelectorAll('[aria-invalid]').forEach(input=>input.removeAttribute('aria-invalid'));
+      const usdBalance=parseInputAmount(editorForm.querySelector('[data-usd]'),'el saldo en dólares');
+      const accounts=[...editorForm.querySelectorAll('[data-account]')].map((section,index)=>{
+        const get=key=>section.querySelector(`[data-field="${key}"]`);
+        const name=requiredInput(get('name'),`el nombre de la cuenta ${index+1}`);
+        const cbu=requiredInput(get('cbu'),`el CBU de la cuenta ${index+1}`);
+        if(!/^\d{22}$/.test(cbu))invalid(get('cbu'),`El CBU de la cuenta ${index+1} debe tener 22 dígitos.`);
+        const balance=parseInputAmount(get('balance'),`el saldo de la cuenta ${index+1}`);
+        const movements=[...section.querySelectorAll('[data-row]')].map((row,i)=>{
+          const field=key=>row.querySelector(`[data-name="${key}"]`);
+          return {date:requiredInput(field('date'),`la fecha del movimiento ${i+1}`),label:requiredInput(field('label'),`el detalle del movimiento ${i+1}`),amount:parseInputAmount(field('amount'),`el importe del movimiento ${i+1}`),balance:parseInputAmount(field('balance'),`el saldo del movimiento ${i+1}`)};
+        });
+        return {name,cbu,balance,movements};
+      });
+      return normalizeData({accounts,usdBalance});
+    }
+    function notifySaved(message){const toast=document.getElementById('toast');toast.textContent=message;toast.hidden=false;clearTimeout(toastTimer);toastTimer=setTimeout(()=>toast.hidden=true,4400)}
+    function openEditor(){editorReturn=location.hash==='#/cuentas'?'/cuentas':'/';renderEditor({accounts,usdBalance});location.hash='/editar'}
+    function updateSelected(index){
+      if(index===selected)return;
+      selected=index;
+      dots.querySelectorAll('.dot').forEach((dot,i)=>dot.setAttribute('aria-current',String(i===selected)));
+      renderMovements();
+    }
+    function scrollToAccount(index,behavior='smooth'){
+      const card=carousel.children[index];
+      if(!card)return;
+      updateSelected(index);
+      carousel.scrollTo({left:card.offsetLeft-(carousel.clientWidth-card.clientWidth)/2,behavior});
+    }
+    function nearestAccount(){
+      const center=carousel.scrollLeft+carousel.clientWidth/2;
+      let closest=0,distance=Infinity;
+      [...carousel.children].forEach((card,index)=>{const gap=Math.abs(card.offsetLeft+card.clientWidth/2-center);if(gap<distance){distance=gap;closest=index}});
+      return closest;
+    }
+    carousel.addEventListener('scroll',()=>{clearTimeout(scrollTimer);updateSelected(nearestAccount());scrollTimer=setTimeout(()=>{if(!carousel.classList.contains('dragging'))scrollToAccount(nearestAccount())},130)},{passive:true});
+    dots.addEventListener('click',event=>{const button=event.target.closest('[data-index]');if(button)scrollToAccount(Number(button.dataset.index))});
+    carousel.addEventListener('keydown',event=>{if(event.key==='ArrowRight'||event.key==='ArrowLeft'){event.preventDefault();scrollToAccount(Math.max(0,Math.min(accounts.length-1,selected+(event.key==='ArrowRight'?1:-1))))}});
+    let drag=null;
+    carousel.addEventListener('pointerdown',event=>{if(event.pointerType==='mouse'){drag={x:event.clientX,left:carousel.scrollLeft,moved:false};carousel.classList.add('dragging');carousel.setPointerCapture(event.pointerId)}});
+    carousel.addEventListener('pointermove',event=>{if(drag){if(Math.abs(event.clientX-drag.x)>3)drag.moved=true;carousel.scrollLeft=drag.left-(event.clientX-drag.x)}});
+    function endDrag(){if(drag){drag=null;carousel.classList.remove('dragging');scrollToAccount(nearestAccount())}}
+    carousel.addEventListener('pointerup',endDrag);
+    carousel.addEventListener('pointercancel',endDrag);
+    function showScreen(){
+      const isDetail=location.hash==='#/cuentas',isEditor=location.hash==='#/editar';
+      home.hidden=isDetail||isEditor;detail.hidden=!isDetail;editor.hidden=!isEditor;
+      document.getElementById('app').classList.toggle('editing',isEditor);
+      document.title=isEditor?'Editar datos · Mis productos':isDetail?'Cajas de ahorro · Mis productos':'Mis productos';
+      if(isEditor)renderEditor({accounts,usdBalance});
+      if(isDetail){document.getElementById('detail-scroll').scrollTop=0;requestAnimationFrame(()=>scrollToAccount(selected,'instant'))}
+    }
+    document.getElementById('open-accounts').addEventListener('click',()=>{location.hash='/cuentas'});
+    document.getElementById('back-button').addEventListener('click',()=>{location.hash='/'});
+    document.getElementById('home-nav').addEventListener('click',()=>{location.hash='/'});
+    document.getElementById('edit-detail').addEventListener('click',openEditor);
+    document.getElementById('editor-back').addEventListener('click',()=>{location.hash=editorReturn});
+    document.getElementById('cancel-edit').addEventListener('click',()=>{location.hash=editorReturn});
+    editorForm.addEventListener('click',event=>{
+      const add=event.target.closest('[data-add]'),remove=event.target.closest('[data-remove]');
+      if(add){const container=add.closest('[data-account]').querySelector('[data-movements]');container.insertAdjacentHTML('beforeend',movementFields({date:'',label:'',amount:0,balance:0},container.children.length));container.lastElementChild.querySelector('input').focus()}
+      if(remove){const container=remove.closest('[data-account]').querySelector('[data-movements]');remove.closest('[data-row]').remove();container.querySelectorAll('.editor-movement-head span').forEach((label,index)=>label.textContent=`Movimiento ${index+1}`)}
+    });
+    editorForm.addEventListener('submit',event=>{
+      event.preventDefault();
+      try{
+        const next=readEditorData();
+        localStorage.setItem(STORAGE_KEY,JSON.stringify({version:1,...next}));
+        accounts=next.accounts;usdBalance=next.usdBalance;selected=Math.min(selected,accounts.length-1);
+        renderSummary();renderCards();renderMovements();
+        location.hash=editorReturn;notifySaved('Cambios guardados en este navegador');
+      }catch(error){document.getElementById('editor-feedback').style.color='#b52737';document.getElementById('editor-feedback').textContent=error.message||'No se pudieron guardar los cambios.'}
+    });
+    document.getElementById('export-data').addEventListener('click',()=>{
+      try{
+        const data=readEditorData();const blob=new Blob([JSON.stringify({version:1,...data},null,2)],{type:'application/json'});
+        const url=URL.createObjectURL(blob),link=document.createElement('a');link.href=url;link.download='mis-productos-datos.json';document.body.append(link);link.click();link.remove();setTimeout(()=>URL.revokeObjectURL(url),1000);
+        document.getElementById('editor-feedback').textContent='';
+      }catch(error){document.getElementById('editor-feedback').style.color='#b52737';document.getElementById('editor-feedback').textContent=error.message}
+    });
+    const importFile=document.getElementById('import-file');
+    document.getElementById('import-data').addEventListener('click',()=>importFile.click());
+    importFile.addEventListener('change',async()=>{
+      const file=importFile.files?.[0];if(!file)return;
+      try{if(file.size>1000000)throw new Error('El archivo es demasiado grande.');const data=normalizeData(JSON.parse(await file.text()));renderEditor(data);document.getElementById('editor-feedback').style.color='#087b27';document.getElementById('editor-feedback').textContent='Archivo cargado. Tocá Guardar cambios para aplicarlo.'}
+      catch(error){document.getElementById('editor-feedback').style.color='#b52737';document.getElementById('editor-feedback').textContent=error.message||'No se pudo importar el archivo.'}
+      finally{importFile.value=''}
+    });
+    document.getElementById('reset-data').addEventListener('click',()=>{if(confirm('¿Restablecer los datos de ejemplo?')){renderEditor(clone(exampleData));document.getElementById('editor-feedback').style.color='#087b27';document.getElementById('editor-feedback').textContent='Ejemplo cargado. Tocá Guardar cambios para aplicarlo.'}});
+    const dialog=document.getElementById('aux-dialog');
+    document.getElementById('menu-button').addEventListener('click',()=>{
+      document.getElementById('dialog-title').textContent='Menú';
+      document.getElementById('dialog-content').innerHTML='<button class="dialog-action" type="button" data-go="/">Mis productos</button><button class="dialog-action" type="button" data-go="/cuentas">Cajas de ahorro</button><button class="dialog-action" type="button" data-go="/editar">Editar datos</button>';
+      dialog.showModal();
+    });
+    document.getElementById('help-button').addEventListener('click',()=>{
+      document.getElementById('dialog-title').textContent='Ayuda';
+      document.getElementById('dialog-content').innerHTML='<p>Tocá Cajas de ahorros para ver las cuentas. Deslizá las tarjetas para cambiar de cuenta y sus movimientos. En el menú podés editar los datos.</p>';
+      dialog.showModal();
+    });
+    document.getElementById('dialog-close').addEventListener('click',()=>dialog.close());
+    dialog.addEventListener('click',event=>{const link=event.target.closest('[data-go]');if(link){dialog.close();if(link.dataset.go==='/editar')openEditor();else location.hash=link.dataset.go}});
+    document.getElementById('visibility-button').addEventListener('click',event=>{
+      hiddenAmounts=!hiddenAmounts;
+      event.currentTarget.setAttribute('aria-pressed',String(hiddenAmounts));
+      event.currentTarget.setAttribute('aria-label',hiddenAmounts?'Mostrar importes':'Ocultar importes');
+      event.currentTarget.querySelector('.eye-slash').style.display=hiddenAmounts?'block':'none';
+      renderSummary();
+      renderCards();renderMovements();requestAnimationFrame(()=>scrollToAccount(selected,'instant'));
+    });
+    window.addEventListener('hashchange',showScreen);
+    renderSummary();renderCards();renderMovements();showScreen();
+  </script>
+</body>
+</html>
