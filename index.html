@@ -122,7 +122,7 @@
     <section class="screen" id="home-screen" aria-label="Mis productos">
       <header class="topbar">
         <button class="icon-button" type="button" aria-label="Menú" id="menu-button"><svg viewBox="0 0 32 32" aria-hidden="true"><path d="M5 9h22M5 16h22M5 23h22"/></svg></button>
-        <div class="title-group"><h1>Mis productos</h1><span class="demo-tag">DEMO</span></div>
+        <div class="title-group"><h1>Mis productos</h1></div>
         <button class="help" type="button" id="help-button" aria-label="Ayuda"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 19c5 0 9-3.4 9-7.5S17 4 12 4s-9 3.4-9 7.5c0 1.8.7 3.4 2 4.7L4 20l4.2-1.8c1.2.5 2.5.8 3.8.8Z"/><path d="M9.8 9.5a2.4 2.4 0 0 1 4.5 1.1c0 1.7-2.3 1.8-2.3 3.3M12 16.7h.01"/></svg>Ayuda</button>
       </header>
       <main class="home-scroll">
@@ -140,7 +140,7 @@
       </main>
     </section>
     <section class="screen" id="detail-screen" aria-label="Cajas de ahorro" hidden>
-      <header class="topbar detail-header"><button class="icon-button back" type="button" id="back-button" aria-label="Volver a Mis productos"><svg viewBox="0 0 32 32" aria-hidden="true"><path d="M25 16H7m0 0 8-8m-8 8 8 8"/></svg></button><div class="title-group"><h1>Cajas de ahorro</h1><span class="demo-tag">DEMO</span></div><button class="icon-button" type="button" id="edit-detail" aria-label="Editar datos"><svg viewBox="0 0 32 32" aria-hidden="true"><path d="M6 23 22 7l4 4-16 16-5 1 1-5ZM19 10l4 4"/></svg></button></header>
+      <header class="topbar detail-header"><button class="icon-button back" type="button" id="back-button" aria-label="Volver a Mis productos"><svg viewBox="0 0 32 32" aria-hidden="true"><path d="M25 16H7m0 0 8-8m-8 8 8 8"/></svg></button><div class="title-group"><h1>Cajas de ahorro</h1></div><button class="icon-button" type="button" id="edit-detail" aria-label="Editar datos"><svg viewBox="0 0 32 32" aria-hidden="true"><path d="M6 23 22 7l4 4-16 16-5 1 1-5ZM19 10l4 4"/></svg></button></header>
       <main class="detail-scroll" id="detail-scroll">
         <div class="detail-hero"><div class="carousel" id="carousel" tabindex="0" role="region" aria-label="Cajas de ahorro: deslizar para cambiar de cuenta"></div><div class="dots" id="dots" aria-label="Seleccionar cuenta"></div></div>
         <h2 class="movements-title">Últimos movimientos</h2>
@@ -148,7 +148,7 @@
       </main>
     </section>
     <section class="screen" id="editor-screen" aria-label="Editar datos" hidden>
-      <header class="topbar detail-header"><button class="icon-button back" type="button" id="editor-back" aria-label="Salir del editor"><svg viewBox="0 0 32 32" aria-hidden="true"><path d="M25 16H7m0 0 8-8m-8 8 8 8"/></svg></button><div class="title-group"><h1>Editar datos</h1><span class="demo-tag">DEMO</span></div><span></span></header>
+      <header class="topbar detail-header"><button class="icon-button back" type="button" id="editor-back" aria-label="Salir del editor"><svg viewBox="0 0 32 32" aria-hidden="true"><path d="M25 16H7m0 0 8-8m-8 8 8 8"/></svg></button><div class="title-group"><h1>Editar datos</h1></div><span></span></header>
       <main class="editor-scroll"><p class="editor-note">Los cambios se guardan en este navegador. Para usarlos en otro dispositivo, exportá el archivo de datos e importalo allí.</p><form id="editor-form" novalidate></form><div class="editor-actions"><button class="text-action" type="button" id="export-data">Exportar datos</button><button class="text-action" type="button" id="import-data">Importar datos</button><input type="file" id="import-file" accept="application/json,.json" hidden><button class="text-action" type="button" id="reset-data">Restablecer ejemplo</button></div><p class="editor-feedback" id="editor-feedback" role="alert"></p></main>
       <footer class="editor-footer"><button type="button" id="cancel-edit">Cancelar</button><button class="save-button" type="submit" form="editor-form">Guardar cambios</button></footer>
     </section>
